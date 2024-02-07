@@ -34,6 +34,7 @@
 #include "mp3_decoder.h"
 #include "wav_decoder.h"
 
+#include "tone_stream.h"
 #include "http_stream.h"
 #include "vfs_stream.h"
 #include "i2s_stream.h"
@@ -113,10 +114,15 @@ STATIC esp_audio_handle_t audio_player_create(void)
 
     // add input stream
     // fatfs stream
-    vfs_stream_cfg_t fs_reader = VFS_STREAM_CFG_DEFAULT();
-    fs_reader.type = AUDIO_STREAM_READER;
-    fs_reader.task_core = 1;
-    esp_audio_input_stream_add(player, vfs_stream_init(&fs_reader));
+    //vfs_stream_cfg_t fs_reader = VFS_STREAM_CFG_DEFAULT();
+    //fs_reader.type = AUDIO_STREAM_READER;
+    //fs_reader.task_core = 1;
+    //esp_audio_input_stream_add(player, vfs_stream_init(&fs_reader));
+    // flash tone stream
+    //ESP_LOGI(TAG, "[2.1] Create tone stream to read data from flash");
+    tone_stream_cfg_t tone_cfg = TONE_STREAM_CFG_DEFAULT();
+    tone_cfg.type = AUDIO_STREAM_READER;
+    esp_audio_input_stream_add(player, tone_stream_init(&tone_cfg));
     // http stream
     http_stream_cfg_t http_cfg = HTTP_STREAM_CFG_DEFAULT();
     http_cfg.event_handle = _http_stream_event_handle;

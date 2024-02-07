@@ -33,9 +33,9 @@ esp_dispatcher_handle_t esp_dispatcher_get_delegate_handle(void)
 {
     if (shared_handle == NULL) {
         esp_dispatcher_config_t d_cfg = ESP_DISPATCHER_CONFIG_DEFAULT();
-        d_cfg.task_core = CONFIG_ESP_DISPATCHER_DELEGATE_TASK_CORE;
-        d_cfg.task_prio = CONFIG_ESP_DISPATCHER_DELEGATE_TASK_PRIO;
-        d_cfg.task_stack = CONFIG_ESP_DISPATCHER_DELEGATE_STACK_SIZE;
+        d_cfg.task_core = 0;
+        d_cfg.task_prio = 4;
+        d_cfg.task_stack = 1024*2;
         d_cfg.stack_in_ext = false;
         shared_handle = esp_dispatcher_create(&d_cfg);
     }

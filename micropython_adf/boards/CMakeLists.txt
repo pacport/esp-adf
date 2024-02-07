@@ -14,6 +14,15 @@ set(srcs
     ${ADF_COMPS}/audio_stream/lib/hls/join_path.c
     ${ADF_COMPS}/audio_stream/lib/hls/line_reader.c
     ${ADF_COMPS}/esp_peripherals/driver/i2c_bus/i2c_bus.c
+
+
+    ${ADF_COMPS}/audio_stream/tone_stream.c
+    ${ADF_COMPS}/tone_partition/tone_partition.c
+    ${ADF_COMPS}/esp_actions/partition_action.c
+    ${ADF_COMPS}/esp_dispatcher/esp_dispatcher.c
+    ${ADF_COMPS}/esp_dispatcher/esp_delegate.c
+    
+
 )
 
 set(includes
@@ -30,6 +39,12 @@ set(includes
     ${ADF_COMPS}/esp_peripherals/driver/i2c_bus
     ${ADF_COMPS}/display_service/include
     ${ADF_COMPS}/esp_dispatcher/include
+
+
+    ${ADF_COMPS}/tone_partition/include
+    ${IDF_PATH}/components/bootloader_support/include
+    ${IDF_PATH}/components/esp_app_format/include
+    ${ADF_COMPS}/esp_actions/include
 )
 
 idf_component_register(

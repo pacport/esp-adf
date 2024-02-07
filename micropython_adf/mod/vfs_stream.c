@@ -91,9 +91,11 @@ static esp_err_t _vfs_open(audio_element_handle_t self)
     vfs_stream_t *vfs = (vfs_stream_t *)audio_element_getdata(self);
 
     audio_element_info_t info;
+    mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("failed to open 21212121121212"));
     char *uri = audio_element_get_uri(self);
     if (uri == NULL) {
         ESP_LOGE(TAG, "Error, uri is not set");
+        mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("Error, uri is not set"));
         return ESP_FAIL;
     }
     ESP_LOGD(TAG, "_vfs_open, uri:%s", uri);
@@ -101,10 +103,12 @@ static esp_err_t _vfs_open(audio_element_handle_t self)
     audio_element_getinfo(self, &info);
     if (path == NULL) {
         ESP_LOGE(TAG, "Error, need file path to open");
+        mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("Error, need file path to open"));
         return ESP_FAIL;
     }
     if (vfs->is_open) {
         ESP_LOGE(TAG, "already opened");
+        mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("already opened"));
         return ESP_FAIL;
     }
     path += strlen("/sdcard");
@@ -122,6 +126,7 @@ static esp_err_t _vfs_open(audio_element_handle_t self)
             }
         } else {
             ESP_LOGE(TAG, "failed to open %s", path);
+            mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("failed to open"));
             return ESP_FAIL;
         }
     } else if (vfs->type == AUDIO_STREAM_WRITER) {
@@ -141,10 +146,12 @@ static esp_err_t _vfs_open(audio_element_handle_t self)
             }
         } else {
             ESP_LOGE(TAG, "failed to open %s", path);
+            mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("failed to open 2"));
             return ESP_FAIL;
         }
     } else {
         ESP_LOGE(TAG, "vfs must be Reader or Writer");
+        mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("vfs must be Reader or Writer"));
         return ESP_FAIL;
     }
 
@@ -254,11 +261,14 @@ audio_element_handle_t vfs_stream_init(vfs_stream_cfg_t *config)
     mp_vfs_mount_t *existing_mount = mp_vfs_lookup_path("/sdcard", &path_out);
     if (existing_mount == MP_VFS_NONE || existing_mount == MP_VFS_ROOT) {
         ESP_LOGE(TAG, "No vfs mount");
+        if(existing_mount == MP_VFS_ROOT) mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("MP_VFS_ROOT"));
+        if(existing_mount == MP_VFS_NONE) mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("MP_VFS_NONE"));
         goto _vfs_init_exit;
     }
     fs_user_mount_t *user_mount = MP_OBJ_TO_PTR(existing_mount->obj);
     if (user_mount == NULL) {
         ESP_LOGE(TAG, "No user mount");
+        mp_raise_msg(&mp_type_OSError, MP_ERROR_TEXT("No user mount"));
         goto _vfs_init_exit;
     }
     vfs->fatfs = &user_mount->fatfs;
@@ -277,7 +287,8 @@ audio_element_handle_t vfs_stream_init(vfs_stream_cfg_t *config)
         cfg.buffer_len = VFS_STREAM_BUF_SIZE;
     }
 
-    cfg.tag = "file";
+    //cfg.tag = "file";
+    cfg.tag = "vfs";
     vfs->type = config->type;
 
     if (config->type == AUDIO_STREAM_WRITER) {
