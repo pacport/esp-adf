@@ -38,6 +38,8 @@
 #include "http_stream.h"
 #include "vfs_stream.h"
 #include "i2s_stream.h"
+#include "audio_embed_tone.h"
+#include "embed_flash_stream.h"
 
 #include "board_init.h"
 
@@ -123,6 +125,13 @@ STATIC esp_audio_handle_t audio_player_create(void)
     tone_stream_cfg_t tone_cfg = TONE_STREAM_CFG_DEFAULT();
     tone_cfg.type = AUDIO_STREAM_READER;
     esp_audio_input_stream_add(player, tone_stream_init(&tone_cfg));
+
+
+    embed_flash_stream_cfg_t embed_cfg = EMBED_FLASH_STREAM_CFG_DEFAULT();
+    audio_element_handle_t embed_flash_stream_reader = embed_flash_stream_init(&embed_cfg);
+    embed_flash_stream_set_context(embed_flash_stream_reader, (embed_item_info_t *)&g_embed_tone[0], EMBED_TONE_URL_MAX);
+    audio_element_set_uri(embed_flash_stream_reader, embed_tone_url[NEW_MESSAGE_MP3]);
+    esp_audio_input_stream_add(player, embed_flash_stream_reader);
     // http stream
     http_stream_cfg_t http_cfg = HTTP_STREAM_CFG_DEFAULT();
     http_cfg.event_handle = _http_stream_event_handle;

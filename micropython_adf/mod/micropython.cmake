@@ -21,6 +21,9 @@ target_include_directories(adf_module INTERFACE
     ${IDF_PATH}/components/esp32-camera/sensors/private_include
 )
 
+
+
+
 target_compile_definitions(adf_module INTERFACE)
 
 target_link_libraries(usermod INTERFACE adf_module)
