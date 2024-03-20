@@ -6,6 +6,7 @@ target_sources(adf_module INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/vfs_stream.c
     ${CMAKE_CURRENT_LIST_DIR}/modaudio.c
     ${CMAKE_CURRENT_LIST_DIR}/modcamera.c
+    ${CMAKE_CURRENT_LIST_DIR}/modmd5.c
 )
 
 target_include_directories(adf_module INTERFACE
